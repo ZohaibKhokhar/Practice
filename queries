@@ -1,0 +1,176 @@
+-- Create Database
+CREATE DATABASE hashim_3174;
+GO
+
+USE hashim_3174;
+GO
+
+-- Create Tables
+CREATE TABLE Authors (
+    AuthorID INT PRIMARY KEY,
+    AuthorName VARCHAR(100) NOT NULL,
+    DateOfBirth DATE
+);
+
+CREATE TABLE Publishers (
+    PublisherID INT PRIMARY KEY,
+    PublisherName VARCHAR(100) NOT NULL,
+    Address VARCHAR(200)
+);
+
+CREATE TABLE Books (
+    BookID INT PRIMARY KEY,
+    Title VARCHAR(200) NOT NULL,
+    AuthorID INT FOREIGN KEY REFERENCES Authors(AuthorID),
+    PublisherID INT FOREIGN KEY REFERENCES Publishers(PublisherID),
+    PublicationDate DATE,
+    Price DECIMAL(10,2) DEFAULT 0,
+    Genre VARCHAR(500),
+    ISBN CHAR(13) UNIQUE
+);
+
+CREATE TABLE Borrowers (
+    BorrowerID INT PRIMARY KEY,
+    BorrowerName VARCHAR(100) NOT NULL,
+    Email VARCHAR(100) UNIQUE,
+    Phone CHAR(10)
+);
+
+CREATE TABLE Loans (
+    LoanID INT PRIMARY KEY,
+    BookID INT FOREIGN KEY REFERENCES Books(BookID),
+    BorrowerID INT FOREIGN KEY REFERENCES Borrowers(BorrowerID),
+    LoanDate DATE DEFAULT GETDATE(),
+    ReturnDate DATE
+);
+
+-- Alter Borrowers table: BorrowerName NOT NULL (already enforced above, included here per instruction)
+ALTER TABLE Borrowers
+ALTER COLUMN BorrowerName VARCHAR(100) NOT NULL;
+
+-- Enforce uniqueness on ISBN (already added above)
+
+-- Add CHECK constraint for Price > 0
+ALTER TABLE Books
+ADD CONSTRAINT chk_price CHECK (Price > 0);
+
+-- Insert sample data
+INSERT INTO Authors VALUES (1, 'George Orwell', '1903-06-25');
+INSERT INTO Authors VALUES (2, 'J.K. Rowling', '1965-07-31');
+INSERT INTO Authors VALUES (3, 'C.J. Date', '1941-12-15');
+
+INSERT INTO Publishers VALUES (1, 'Penguin Books', '123 Penguin St.');
+INSERT INTO Publishers VALUES (2, 'Bloomsbury', '45 Magic Lane');
+
+INSERT INTO Books VALUES (1, '1984', 1, 1, '1949-06-08', 25.50, 'Dystopian', '1234567890123');
+INSERT INTO Books VALUES (2, 'Animal Farm', 1, 1, '1945-08-17', 18.99, 'Political Satire', '1234567890124');
+INSERT INTO Books VALUES (3, 'Harry Potter and the Philosopher''s Stone', 2, 2, '1997-06-26', 35.00, 'Fantasy', '1234567890125');
+INSERT INTO Books VALUES (4, 'SQL Fundamentals', 3, 1, '2000-01-01', 45.00, 'Education', '1234567890126');
+INSERT INTO Books VALUES (5, 'The SQL Guide', 3, 1, '2008-03-15', 29.99, NULL, '1234567890127');
+
+INSERT INTO Borrowers VALUES (1, 'Alice Smith', 'alice@example.com', '0123456789');
+INSERT INTO Borrowers VALUES (2, 'Bob Johnson', 'bob@example.com', '0987654321');
+
+INSERT INTO Loans VALUES (1, 1, 1, '2025-08-01', NULL);
+INSERT INTO Loans VALUES (2, 3, 1, '2025-08-02', '2025-08-06');
+INSERT INTO Loans VALUES (3, 4, 2, '2025-08-05', NULL);
+
+-- Queries
+
+-- Retrieve all books with price > 20
+SELECT * FROM Books WHERE Price > 20;
+
+-- Title of each book currently on loan and borrower's name
+SELECT b.Title, br.BorrowerName
+FROM Books b
+JOIN Loans l ON b.BookID = l.BookID
+JOIN Borrowers br ON l.BorrowerID = br.BorrowerID
+WHERE l.ReturnDate IS NULL;
+
+-- Count of books written by each author (more than 2 books)
+SELECT a.AuthorName, COUNT(*) AS BookCount
+FROM Authors a
+JOIN Books b ON a.AuthorID = b.AuthorID
+GROUP BY a.AuthorName
+HAVING COUNT(*) > 2;
+
+-- Each book with borrower's name (NULL if not on loan)
+SELECT b.Title, br.BorrowerName
+FROM Books b
+LEFT JOIN Loans l ON b.BookID = l.BookID AND l.ReturnDate IS NULL
+LEFT JOIN Borrowers br ON l.BorrowerID = br.BorrowerID;
+
+-- Each publisher with books (NULL if no book)
+SELECT p.PublisherName, b.Title
+FROM Publishers p
+LEFT JOIN Books b ON p.PublisherID = b.PublisherID;
+
+-- All unique genres
+SELECT DISTINCT Genre FROM Books;
+
+-- Books with title starting with "The" or containing "SQL"
+SELECT * FROM Books
+WHERE Title LIKE 'The%' OR Title LIKE '%SQL%';
+
+-- 5 most recent loan records
+SELECT TOP 5 * FROM Loans ORDER BY LoanDate DESC;
+
+-- Update ReturnDate for LoanID = 1
+UPDATE Loans SET ReturnDate = GETDATE() WHERE LoanID = 1;
+
+-- Increase price by 10% for books published before Jan 1, 2010
+UPDATE Books
+SET Price = Price * 1.10
+WHERE PublicationDate < '2010-01-01';
+
+-- Delete borrowers with no loans
+DELETE FROM Borrowers
+WHERE BorrowerID NOT IN (
+    SELECT DISTINCT BorrowerID FROM Loans
+);
+
+-- Delete books priced less than 5
+DELETE FROM Books WHERE Price < 5;
+
+-- Remove Address column from Publishers
+ALTER TABLE Publishers DROP COLUMN Address;
+
+-- Drop Loans table
+DROP TABLE Loans;
+
+-- Insert loan using default LoanDate
+INSERT INTO Loans (LoanID, BookID, BorrowerID)
+VALUES (4, 2, 2);
+
+-- Create BookCategories table
+CREATE TABLE BookCategories (
+    BookID INT,
+    Category VARCHAR(100),
+    PRIMARY KEY (BookID, Category),
+    FOREIGN KEY (BookID) REFERENCES Books(BookID)
+);
+
+-- Count of loans per borrower
+SELECT br.BorrowerName, COUNT(*) AS LoanCount
+FROM Borrowers br
+JOIN Loans l ON br.BorrowerID = l.BorrowerID
+GROUP BY br.BorrowerName
+ORDER BY LoanCount DESC;
+
+-- Set NULL genres to 'Unknown'
+UPDATE Books SET Genre = 'Unknown' WHERE Genre IS NULL;
+
+-- Delete loans older than 1 year
+DELETE FROM Loans WHERE LoanDate < DATEADD(YEAR, -1, GETDATE());
+
+-- Normalization of: LoanInfo(LoanID, BookTitle, BorrowerName, BorrowerAddress, LoanDate)
+
+-- Violations:
+-- 1NF: Non-atomic fields if BookTitle or BorrowerName include multiple values
+-- 2NF: BookTitle and BorrowerAddress dependent on part of composite key
+-- 3NF: BorrowerAddress transitively dependent on BorrowerName
+
+-- Decomposed tables in 3NF:
+-- Books(BookID, Title)
+-- Borrowers(BorrowerID, BorrowerName, Address)
+-- Loans(LoanID, BookID, BorrowerID, LoanDate)
