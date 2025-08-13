@@ -1,0 +1,78 @@
+use zohaib_6615
+
+
+create table Patient(
+PatientID int Primary Key identity(1,1),
+PatientName varchar(100)not null,
+PatientAge int not null,
+PatientEmail varchar(200) not null,
+PatientPhoneNUmber char(11) not null
+)
+
+
+go
+
+create table Doctor(
+DoctorID int Primary Key identity(1,1),
+DoctorName varchar(100),
+DoctorAge int not null,
+DoctorEmail varchar(200) not null,
+DoctorPhoneNUmber char(11) not null
+
+)
+
+go
+create table VisitType(
+VisitTypeID int primary key identity(1,1),
+TypeName varchar(50)
+)
+go
+
+create table PatientVisit(
+VisitID int primary key identity(1,1),
+PatientID int foreign key references Patient(PatientID),
+DoctorID int foreign key references Doctor(DoctorID),
+VisitTypeID int foreign key references VisitType(VisitTypeID),
+VisitDate date not null,
+Description varchar(100)
+)
+
+go
+
+create table UserRole(
+RoleID int primary key identity(1,1),
+RoleName varchar(50) not null,
+)
+
+go
+
+create table FeeSchedule(
+FeeID int primary key identity(1,1) ,
+VisitTypeID int foreign key references VisitType(VisitTypeID),
+Fee decimal(10,2)
+)
+go
+create table ActivityLog(
+LogID int primary key identity(1,1) ,
+RoleID int foreign key references UserRole(RoleID),
+LogMessage varchar(200) not null,
+LogDate date not null
+)
+go
+
+USE zohaib_6615
+GO
+
+CREATE TABLE [User] (
+    UserID INT PRIMARY KEY IDENTITY(1,1),
+    Username VARCHAR(100) NOT NULL UNIQUE,
+    Email VARCHAR(200) NOT NULL UNIQUE,
+    PasswordHash VARCHAR(255) NOT NULL,
+    RoleID INT NOT NULL FOREIGN KEY REFERENCES UserRole(RoleID),
+    IsActive BIT NOT NULL DEFAULT 1,
+    CreatedAt DATETIME NOT NULL DEFAULT GETDATE()
+);
+GO
+
+
+
