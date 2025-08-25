@@ -1,0 +1,81 @@
+D) Chrome DevTools & Debugging
+Your reproducible-bug checklist—what’s in it?
+Two ways to open DevTools.
+What do you use the Elements tab for?
+What do you use the Console for?
+What does the Network tab help you see?
+What is a breakpoint?
+How do you emulate a phone in DevTools? (How to open website in phone's resolution in browser?)
+When would you use a conditional breakpoint vs a logpoint?
+In the Network tab, how can you confirm a response came from cache?
+How do you throttle network and CPU to simulate low-end devices?
+E) Browser API Basics
+What is event delegation (simple)?
+What does setTimeout do?
+What is the Clipboard API used for?
+What is FormData and when do you use it?
+IntersectionObserver: two use cases and one pitfall to watch.
+MutationObserver vs DOM events: when would you prefer one over the other?
+What are the user-gesture and security constraints of the Clipboard & Permissions APIs?
+Why is ResizeObserver better than window.onresize for components?
+F) jQuery
+What is jQuery?
+Why was jQuery useful in the past but less necessary now? What pain did jQuery fix in 2006–2015, and what’s left of that pain today?
+Name a situation where you might still use jQuery today.
+What are the risks of keeping jQuery in a modern bundle?
+G) Why Frameworks & How to Choose
+If “you can do everything in vanilla JS,” why use a framework at all?
+Top selection criteria for framework for a new enterprise web app (rank 3–5 most important).
+When is no framework the right call?
+What’s an SPA vs an MPA—basic idea only.
+H) Angular vs React — Scenarios
+Give 3 scenarios where Angular is a better fit than React.
+Give 3 scenarios where React is a better fit than Angular.
+Do both work with TypeScript? How does TypeScript usage/culture differ between typical Angular and React teams?
+I) Angular Basics
+What is an Angular component?
+What is data binding in Angular?
+What is a service?
+What does dependency injection mean in simple words?
+What is the router for?
+What do we usually do in ngOnInit?
+Why do we use ngOnDestroy?
+What are standalone components?
+An input of a component just changed and you need to run some code immediately, which hook to chose?
+Why not write some code in ngDoCheck?
+What is change detection in angular? How does it know that something in template has changed and now it needs to update it?
+How to restrict user from opening a route?
+What is a subject and its types?
+J) JS Advanced:
+What is a callback?
+What is IIFE?
+If JS is single threaded then how does it process non blocking async operations?
+What is a Promise?
+K) Dry Run the code:
+For this section analyze the code in your head first, write your observations, then run in mdn playgound or html document, record actual output and find the reason of difference.
+Debug: Why does this handler sometimes not attach, and two fixes?
+Write what issue can we face if we are loading JavaScript in head of html like the below code?
+ 
+ 
+<head>
+  <script>
+   document.getElementById('go').addEventListener('click', () => alert('hi'));
+  </script>
+</head>
+<body>
+  <button id="go">Go</button>
+</body>
+ 
+What is output of following code:
+ 
+console.log('1');
+setTimeout(() => console.log('2'));
+Promise.resolve().then(() => console.log('3'));
+console.log('4');
+What is output of following code:
+How to resolve if there is an issue in this?
+ 
+ 
+for (let i = 0; i < 3; i++) {
+  setTimeout(() => console.log(i), 0);
+}
