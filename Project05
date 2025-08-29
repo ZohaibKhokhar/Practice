@@ -1,0 +1,35 @@
+Angular NGXS State Management — Extension Assignment
+1. Overview & Objectives
+In this task, you will set up NGXS in the Angular front end for the Patient Visit Manager. The goal is that all shared data is managed in the store, not directly in services.
+You will:
+
+Define and organize app state (Auth, Patients, Doctors, Visits, FeeSchedule, ActivityLog).
+Create actions, state handlers, and selectors.
+Connect the store with the .NET Core Web API so the data always stays in sync.
+2. Requirements
+State Slices (one State class for each module):
+AuthState → user info, role, token, isAuthenticated.
+PatientState, DoctorState, VisitState → list of entities, ids, loading/error flags.
+FeeScheduleState, ActivityLogState → data, lastFetched time, loading/error.
+Actions (trigger events in the store):
+Auth → Login, Logout, RefreshToken.
+CRUD → Load[X], Create[X], Update[X], Delete[X].
+Selectors (get data from the store):
+Provide selectors for lists, single items, loading flags, error messages, and totals.
+Data Flow
+Components will dispatch actions.
+Store will call Web API and update state.
+Components will read data only via selectors (not from services).
+Shared State
+Any data that multiple components need should go into the store.
+Immutability & Single Source of Truth
+Components must not directly change shared services.
+Services can remain as API callers only (no state inside).
+Bonus Tasks ⭐
+Caching → Don’t re-fetch data if it was already loaded recently (e.g., within the last 2 minutes), unless forced.
+Persist State → Use NGXS Storage Plugin so important data (like Auth) stays even after page reload.
+Submission Guidelines
+Upload to Azure DevOps in your respective Repository
+Branch Name: patient-visit-manager-store
+Submission Date: Monday, 1st September, 2025 - 11:00 AM
+Late submission policy applies
