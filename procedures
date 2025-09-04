@@ -1,0 +1,149 @@
+--DML
+--use Zohaib_CareLite
+
+
+
+CREATE PROCEDURE AddUser
+    @RoleID INT,
+    @UserName VARCHAR(200),
+    @UserEmail VARCHAR(300),
+    @UserPhoneNumber VARCHAR(13),
+    @UserAddress VARCHAR(200),
+    @UserPassword VARCHAR(200)
+AS
+BEGIN
+    SET NOCOUNT OFF;
+
+    INSERT INTO [User] (RoleID, UserName, UserEmail, UserPhoneNumber, UserAddress, UserPassword)
+    VALUES (@RoleID, @UserName, @UserEmail, @UserPhoneNumber, @UserAddress, @UserPassword);
+END;
+GO
+
+
+
+
+
+
+CREATE PROCEDURE GetUserByUsername
+    @UserName VARCHAR(200)
+AS
+BEGIN
+    SET NOCOUNT off;
+    SELECT * FROM [User] WHERE UserName = @UserName;
+END
+GO
+
+
+CREATE PROCEDURE GetUserCount
+AS
+BEGIN
+    SET NOCOUNT off;
+    SELECT COUNT(*) FROM [User];
+END
+GO
+
+
+
+CREATE PROCEDURE GetRoleIdByName
+    @RoleName VARCHAR(100)
+AS
+BEGIN
+    SET NOCOUNT ON;
+    SELECT RoleID FROM UserRole WHERE RoleName = @RoleName;
+END
+GO
+
+
+CREATE PROCEDURE UpdateUserPassword
+    @UserID INT,
+    @NewPassword VARCHAR(200)
+AS
+BEGIN
+    SET NOCOUNT ON;
+    UPDATE [User]
+    SET UserPassword = @NewPassword
+    WHERE UserID = @UserID;
+END
+GO
+
+
+
+
+CREATE PROCEDURE UpdateUser
+    @UserID INT,
+    @RoleID INT,
+    @UserName VARCHAR(200),
+    @UserEmail VARCHAR(300),
+    @UserPhoneNumber VARCHAR(13),
+    @UserAddress VARCHAR(200),
+    @UserPassword VARCHAR(200)
+AS
+BEGIN
+    SET NOCOUNT OFF;
+
+    UPDATE [User]
+    SET RoleID = @RoleID,
+        UserName = @UserName,
+        UserEmail = @UserEmail,
+        UserPhoneNumber = @UserPhoneNumber,
+        UserAddress = @UserAddress,
+        UserPassword = @UserPassword
+    WHERE UserID = @UserID;
+END;
+GO
+
+
+
+
+
+
+
+
+
+CREATE PROCEDURE DeleteUser
+    @UserID INT
+AS
+BEGIN
+    SET NOCOUNT OFF;
+
+    DELETE FROM [User]
+    WHERE UserID = @UserID;
+END;
+GO
+
+
+
+
+
+
+
+
+CREATE PROCEDURE GetUserById
+    @UserID INT
+AS
+BEGIN
+    SET NOCOUNT OFF;
+
+    SELECT UserID, RoleID, UserName, UserEmail, UserPhoneNumber, UserAddress, UserPassword
+    FROM [User]
+    WHERE UserID = @UserID;
+END;
+go
+
+
+
+
+
+
+
+
+
+CREATE PROCEDURE GetAllUsers
+AS
+BEGIN
+    SET NOCOUNT OFF;
+
+    SELECT UserID, RoleID, UserName, UserEmail, UserPhoneNumber, UserAddress, UserPassword
+    FROM [User];
+END;
+GO
