@@ -1,0 +1,22 @@
+use story 2082
+As a user, I want to sign in and access protected features so that I can use the system securely
+
+1) Valid credentials → signed in; protected pages accessible.
+2) Invalid credentials → error message; no access granted.
+3) Expired session → redirected to sign‑in with a friendly message.
+4) Each request is traceable by a visible correlation/reference id in logs.
+
+use story 2084
+As a staff member, I want to create a new record (e.g., person/patient) so that operations can begin.
+
+1) Required fields validated in UI and server; descriptive errors shown.
+2) On success, user sees a confirmation and can open the new record.
+3) A potential duplicate is flagged with suggested matches before final submission.
+4) An audit/activity entry is created for the operation.
+
+use story 2085
+As a staff member, I want to search and list records so that I can quickly find existing entries
+
+1) Text search with debounce; results paginated and sorted.
+2) Empty search shows recent items.
+3) Search is case‑insensitive and returns expected matches.
