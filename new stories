@@ -1,0 +1,20 @@
+User Story 2086: As a staff member, I want to schedule an event between a person and a provider so that the clinic can plan visits
+
+1) Duration options are constrained (e.g., 15/30/60).
+2) Event time must be within configurable business hours.
+3) Successful creates immediately appear on the calendar for that provider.
+
+
+User Story 2087: As the system, I want to prevent overlapping events for the same provider so that the schedule remains valid
+
+
+1) Attempting to create an overlap returns a clear conflict message (includes conflicting time).
+2) Editing an event to overlap is also blocked with a message.
+3) In a concurrent create scenario, only one succeeds; the other receives a conflict.
+
+
+User Story 2088: As a staff member, I want to view a weekly calendar so that I can understand provider availability
+
+
+1) Calendar shows booked vs. free slots for a selected provider and week.
+2) Navigation across weeks retains provider selection.
