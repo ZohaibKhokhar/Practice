@@ -1,0 +1,25 @@
+As a clinician, I want to document a visit after the appointment so that clinical details are recorded
+
+1) A visit can only be created if there is a prior scheduled event marked complete.
+2) Only one visit may exist per event.
+3) Visit fields are validated and editable until billing is finalized.
+
+
+As a billing user, I want to generate a bill from a visit so that charges can be issued
+
+1) Bill is created from visit details using simple, configurable rules.
+2) Re‑generating for the same visit returns the existing bill (no duplicates).
+3) Bill shows line items and computed totals before finalization.
+
+As a billing user, I want to record a payment against a bill so that balances are updated
+
+1) Support at least two payment methods (e.g., cash, card simulated).
+2) System prevents over‑payment; remaining balance displayed after save.
+3) An audit entry records who posted the payment and when.
+
+
+As a finance user, I want to view outstanding balances and daily collections so that I can monitor cash flow
+
+1) Outstanding balances shows who owes what with simple filters.
+2) Daily collections shows totals for a chosen date.
+3) Both reports can be exported to CSV (matching current filters).
